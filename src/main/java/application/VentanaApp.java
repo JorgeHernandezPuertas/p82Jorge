@@ -26,13 +26,113 @@ public class VentanaApp extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        VentanaSelect = new javax.swing.JDialog();
+        jPanel1 = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tabla = new javax.swing.JTable();
+        TituloInsert = new javax.swing.JLabel();
+        VentanaInsert = new javax.swing.JDialog();
+        VentanaModificar = new javax.swing.JDialog();
         PanelPrincipal = new javax.swing.JPanel();
         BotonSelect = new javax.swing.JButton();
-        jLabel1 = new javax.swing.JLabel();
+        Titulo = new javax.swing.JLabel();
+        BotonInsert = new javax.swing.JButton();
+        BotonModificar = new javax.swing.JButton();
+
+        VentanaSelect.setTitle("Facturas Almacenadas");
+        VentanaSelect.setBackground(new java.awt.Color(34, 40, 49));
+
+        jPanel1.setBackground(new java.awt.Color(34, 40, 49));
+        jPanel1.setMaximumSize(new java.awt.Dimension(854, 666));
+        jPanel1.setMinimumSize(new java.awt.Dimension(854, 666));
+        jPanel1.setPreferredSize(new java.awt.Dimension(854, 666));
+        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jScrollPane1.setBackground(new java.awt.Color(57, 62, 70));
+        jScrollPane1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 173, 181), 2));
+        jScrollPane1.setForeground(new java.awt.Color(238, 238, 238));
+        jScrollPane1.setViewportBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 173, 181)));
+        jScrollPane1.setColumnHeaderView(null);
+        jScrollPane1.setName("Tabla Facturas"); // NOI18N
+
+        tabla.setBackground(new java.awt.Color(57, 62, 70));
+        tabla.setForeground(new java.awt.Color(238, 238, 238));
+        tabla.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Código", "Fecha Emisión", "Descripción", "Importe Total"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Integer.class, java.lang.Object.class, java.lang.String.class, java.lang.Double.class
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+        });
+        tabla.setName(""); // NOI18N
+        tabla.setSelectionBackground(new java.awt.Color(34, 40, 49));
+        tabla.setSelectionForeground(new java.awt.Color(238, 238, 238));
+        tabla.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+        tabla.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+        tabla.setShowHorizontalLines(true);
+        tabla.setShowVerticalLines(true);
+        jScrollPane1.setViewportView(tabla);
+
+        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 170, 410, 360));
+
+        TituloInsert.setFont(new java.awt.Font("Liberation Sans", 0, 36)); // NOI18N
+        TituloInsert.setForeground(new java.awt.Color(0, 173, 181));
+        TituloInsert.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        TituloInsert.setText("Lista de Facturas");
+        TituloInsert.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jPanel1.add(TituloInsert, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 50, 450, -1));
+
+        javax.swing.GroupLayout VentanaSelectLayout = new javax.swing.GroupLayout(VentanaSelect.getContentPane());
+        VentanaSelect.getContentPane().setLayout(VentanaSelectLayout);
+        VentanaSelectLayout.setHorizontalGroup(
+            VentanaSelectLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        VentanaSelectLayout.setVerticalGroup(
+            VentanaSelectLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+
+        javax.swing.GroupLayout VentanaInsertLayout = new javax.swing.GroupLayout(VentanaInsert.getContentPane());
+        VentanaInsert.getContentPane().setLayout(VentanaInsertLayout);
+        VentanaInsertLayout.setHorizontalGroup(
+            VentanaInsertLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 400, Short.MAX_VALUE)
+        );
+        VentanaInsertLayout.setVerticalGroup(
+            VentanaInsertLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 300, Short.MAX_VALUE)
+        );
+
+        javax.swing.GroupLayout VentanaModificarLayout = new javax.swing.GroupLayout(VentanaModificar.getContentPane());
+        VentanaModificar.getContentPane().setLayout(VentanaModificarLayout);
+        VentanaModificarLayout.setHorizontalGroup(
+            VentanaModificarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 400, Short.MAX_VALUE)
+        );
+        VentanaModificarLayout.setVerticalGroup(
+            VentanaModificarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 300, Short.MAX_VALUE)
+        );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setSize(new java.awt.Dimension(916, 284));
 
         PanelPrincipal.setBackground(new java.awt.Color(34, 40, 49));
+        PanelPrincipal.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        PanelPrincipal.setPreferredSize(new java.awt.Dimension(916, 240));
         PanelPrincipal.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         BotonSelect.setBackground(new java.awt.Color(57, 62, 70));
@@ -40,19 +140,49 @@ public class VentanaApp extends javax.swing.JFrame {
         BotonSelect.setForeground(new java.awt.Color(238, 238, 238));
         BotonSelect.setText("Ver Facturas");
         BotonSelect.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 173, 181)));
+        BotonSelect.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        BotonSelect.setPreferredSize(new java.awt.Dimension(240, 40));
         BotonSelect.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 BotonSelectActionPerformed(evt);
             }
         });
-        PanelPrincipal.add(BotonSelect, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 212, 310, -1));
+        PanelPrincipal.add(BotonSelect, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 140, 240, 40));
 
-        jLabel1.setBackground(new java.awt.Color(0, 0, 0));
-        jLabel1.setFont(new java.awt.Font("Liberation Sans", 0, 36)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(0, 173, 181));
-        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setText("Gestionar facturas");
-        PanelPrincipal.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 30, 510, 50));
+        Titulo.setBackground(new java.awt.Color(0, 0, 0));
+        Titulo.setFont(new java.awt.Font("Liberation Sans", 0, 36)); // NOI18N
+        Titulo.setForeground(new java.awt.Color(0, 173, 181));
+        Titulo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        Titulo.setText("Gestionar facturas");
+        PanelPrincipal.add(Titulo, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 30, 310, 50));
+
+        BotonInsert.setBackground(new java.awt.Color(57, 62, 70));
+        BotonInsert.setFont(new java.awt.Font("Liberation Sans", 0, 24)); // NOI18N
+        BotonInsert.setForeground(new java.awt.Color(238, 238, 238));
+        BotonInsert.setText("Añadir Factura");
+        BotonInsert.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 173, 181)));
+        BotonInsert.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        BotonInsert.setPreferredSize(new java.awt.Dimension(240, 40));
+        BotonInsert.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BotonInsertActionPerformed(evt);
+            }
+        });
+        PanelPrincipal.add(BotonInsert, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 140, 240, 40));
+
+        BotonModificar.setBackground(new java.awt.Color(57, 62, 70));
+        BotonModificar.setFont(new java.awt.Font("Liberation Sans", 0, 24)); // NOI18N
+        BotonModificar.setForeground(new java.awt.Color(238, 238, 238));
+        BotonModificar.setText("Modificar Facturas");
+        BotonModificar.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 173, 181)));
+        BotonModificar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        BotonModificar.setPreferredSize(new java.awt.Dimension(240, 40));
+        BotonModificar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BotonModificarActionPerformed(evt);
+            }
+        });
+        PanelPrincipal.add(BotonModificar, new org.netbeans.lib.awtextra.AbsoluteConstraints(630, 140, 240, 40));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -70,7 +200,27 @@ public class VentanaApp extends javax.swing.JFrame {
 
     private void BotonSelectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonSelectActionPerformed
         // TODO add your handling code here:
+        this.VentanaSelect.setVisible(true);
+        this.VentanaSelect.setSize(854, 666);
+        this.VentanaSelect.setResizable(false);
+        this.VentanaSelect.setLocationRelativeTo(null);
     }//GEN-LAST:event_BotonSelectActionPerformed
+
+    private void BotonInsertActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonInsertActionPerformed
+        // TODO add your handling code here:
+        this.VentanaInsert.setVisible(true);
+        this.VentanaInsert.setSize(854, 666);
+        this.VentanaInsert.setResizable(false);
+        this.VentanaInsert.setLocationRelativeTo(null);
+    }//GEN-LAST:event_BotonInsertActionPerformed
+
+    private void BotonModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonModificarActionPerformed
+        // TODO add your handling code here:
+        this.VentanaModificar.setVisible(true);
+        this.VentanaModificar.setSize(854, 666);
+        this.VentanaModificar.setResizable(false);
+        this.VentanaModificar.setLocationRelativeTo(null);
+    }//GEN-LAST:event_BotonModificarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -108,8 +258,17 @@ public class VentanaApp extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton BotonInsert;
+    private javax.swing.JButton BotonModificar;
     private javax.swing.JButton BotonSelect;
     private javax.swing.JPanel PanelPrincipal;
-    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel Titulo;
+    private javax.swing.JLabel TituloInsert;
+    private javax.swing.JDialog VentanaInsert;
+    private javax.swing.JDialog VentanaModificar;
+    private javax.swing.JDialog VentanaSelect;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable tabla;
     // End of variables declaration//GEN-END:variables
 }
