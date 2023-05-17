@@ -4,6 +4,21 @@
  */
 package application;
 
+import controllers.FacturasJpaController;
+import controllers.exceptions.NonexistentEntityException;
+import controllers.exceptions.PreexistingEntityException;
+import entities.Facturas;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import javax.persistence.Persistence;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author jorge
@@ -31,6 +46,8 @@ public class VentanaApp extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         tabla = new javax.swing.JTable();
         TituloInsert = new javax.swing.JLabel();
+        jSeparator1 = new javax.swing.JSeparator();
+        botonRefrescar = new javax.swing.JButton();
         VentanaInsert = new javax.swing.JDialog();
         jPanel2 = new javax.swing.JPanel();
         labelImporte = new javax.swing.JLabel();
@@ -45,6 +62,18 @@ public class VentanaApp extends javax.swing.JFrame {
         botonInsertar = new javax.swing.JButton();
         separadorInsertar = new javax.swing.JSeparator();
         VentanaModificar = new javax.swing.JDialog();
+        jPanel4 = new javax.swing.JPanel();
+        tituloModificar = new javax.swing.JLabel();
+        separadorModificar = new javax.swing.JSeparator();
+        labelCodigoModificar = new javax.swing.JLabel();
+        labelFechaModificar = new javax.swing.JLabel();
+        labelDescripcionModificar = new javax.swing.JLabel();
+        labelImporteModificar = new javax.swing.JLabel();
+        botonModificar = new javax.swing.JButton();
+        importeModificar = new javax.swing.JTextField();
+        codigoModificar = new javax.swing.JTextField();
+        fechaModificar = new javax.swing.JTextField();
+        descripcionModificar = new javax.swing.JTextField();
         VentanaBorrar = new javax.swing.JDialog();
         jPanel3 = new javax.swing.JPanel();
         tituloBorrar = new javax.swing.JLabel();
@@ -59,6 +88,7 @@ public class VentanaApp extends javax.swing.JFrame {
         BotonInsert = new javax.swing.JButton();
         BotonModificar = new javax.swing.JButton();
         BotonBorrar = new javax.swing.JButton();
+        separadorPrincipal = new javax.swing.JSeparator();
 
         VentanaSelect.setTitle("Facturas Almacenadas");
         VentanaSelect.setBackground(new java.awt.Color(34, 40, 49));
@@ -106,14 +136,28 @@ public class VentanaApp extends javax.swing.JFrame {
         tabla.setShowVerticalLines(true);
         jScrollPane1.setViewportView(tabla);
 
-        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 170, 410, 360));
+        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 130, 790, 430));
 
         TituloInsert.setFont(new java.awt.Font("Liberation Sans", 0, 36)); // NOI18N
         TituloInsert.setForeground(new java.awt.Color(0, 173, 181));
         TituloInsert.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         TituloInsert.setText("Lista de Facturas");
         TituloInsert.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jPanel1.add(TituloInsert, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 50, 450, -1));
+        jPanel1.add(TituloInsert, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 30, 450, -1));
+
+        jSeparator1.setBackground(new java.awt.Color(57, 62, 70));
+        jPanel1.add(jSeparator1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 90, 830, 10));
+
+        botonRefrescar.setBackground(new java.awt.Color(57, 62, 70));
+        botonRefrescar.setForeground(new java.awt.Color(238, 238, 238));
+        botonRefrescar.setText("Refrescar");
+        botonRefrescar.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 173, 181)));
+        botonRefrescar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botonRefrescarActionPerformed(evt);
+            }
+        });
+        jPanel1.add(botonRefrescar, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 590, 80, 40));
 
         javax.swing.GroupLayout VentanaSelectLayout = new javax.swing.GroupLayout(VentanaSelect.getContentPane());
         VentanaSelect.getContentPane().setLayout(VentanaSelectLayout);
@@ -127,76 +171,81 @@ public class VentanaApp extends javax.swing.JFrame {
         );
 
         jPanel2.setBackground(new java.awt.Color(34, 40, 49));
-        jPanel2.setPreferredSize(new java.awt.Dimension(590, 321));
+        jPanel2.setPreferredSize(new java.awt.Dimension(434, 408));
         jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         labelImporte.setForeground(new java.awt.Color(238, 238, 238));
         labelImporte.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         labelImporte.setLabelFor(insertImporte);
         labelImporte.setText("- Importe total");
-        jPanel2.add(labelImporte, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 220, 140, 30));
+        jPanel2.add(labelImporte, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 220, 140, 30));
 
         labelCodigo.setForeground(new java.awt.Color(238, 238, 238));
         labelCodigo.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         labelCodigo.setLabelFor(insertId);
         labelCodigo.setText("- Código");
-        jPanel2.add(labelCodigo, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 100, 90, 30));
+        jPanel2.add(labelCodigo, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 100, 90, 30));
 
         labelFecha.setForeground(new java.awt.Color(238, 238, 238));
         labelFecha.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         labelFecha.setLabelFor(insertFecha);
         labelFecha.setText("- Fecha de emisión");
-        jPanel2.add(labelFecha, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 140, 140, 30));
+        jPanel2.add(labelFecha, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 140, 140, 30));
 
         labelDescripcion.setForeground(new java.awt.Color(238, 238, 238));
         labelDescripcion.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         labelDescripcion.setLabelFor(insertDescripcion);
         labelDescripcion.setText("- Descripción");
-        jPanel2.add(labelDescripcion, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 180, 140, 30));
+        jPanel2.add(labelDescripcion, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 180, 140, 30));
 
         tituloInsertar.setFont(new java.awt.Font("Liberation Sans", 0, 24)); // NOI18N
         tituloInsertar.setForeground(new java.awt.Color(0, 173, 181));
         tituloInsertar.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         tituloInsertar.setText("Insertar Factura");
-        jPanel2.add(tituloInsertar, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 20, 250, 50));
+        jPanel2.add(tituloInsertar, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 10, 250, 50));
 
         insertImporte.setBackground(new java.awt.Color(57, 62, 70));
         insertImporte.setForeground(new java.awt.Color(238, 238, 238));
         insertImporte.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         insertImporte.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 173, 181)));
         insertImporte.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
-        jPanel2.add(insertImporte, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 220, 220, 30));
+        jPanel2.add(insertImporte, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 220, 220, 30));
 
         insertId.setBackground(new java.awt.Color(57, 62, 70));
         insertId.setForeground(new java.awt.Color(238, 238, 238));
         insertId.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         insertId.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 173, 181)));
         insertId.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
-        jPanel2.add(insertId, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 100, 220, 30));
+        jPanel2.add(insertId, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 100, 220, 30));
 
         insertFecha.setBackground(new java.awt.Color(57, 62, 70));
         insertFecha.setForeground(new java.awt.Color(238, 238, 238));
         insertFecha.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         insertFecha.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 173, 181)));
         insertFecha.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
-        jPanel2.add(insertFecha, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 140, 220, 30));
+        jPanel2.add(insertFecha, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 140, 220, 30));
 
         insertDescripcion.setBackground(new java.awt.Color(57, 62, 70));
         insertDescripcion.setForeground(new java.awt.Color(238, 238, 238));
         insertDescripcion.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         insertDescripcion.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 173, 181)));
         insertDescripcion.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
-        jPanel2.add(insertDescripcion, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 180, 220, 30));
+        jPanel2.add(insertDescripcion, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 180, 220, 30));
 
         botonInsertar.setBackground(new java.awt.Color(57, 62, 70));
         botonInsertar.setForeground(new java.awt.Color(238, 238, 238));
         botonInsertar.setText("Insertar");
         botonInsertar.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 173, 181)));
         botonInsertar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        jPanel2.add(botonInsertar, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 270, 70, 30));
+        botonInsertar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botonInsertarActionPerformed(evt);
+            }
+        });
+        jPanel2.add(botonInsertar, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 280, 70, 30));
 
         separadorInsertar.setForeground(new java.awt.Color(57, 62, 70));
-        jPanel2.add(separadorInsertar, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 70, 570, 10));
+        jPanel2.add(separadorInsertar, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 70, 410, 10));
 
         javax.swing.GroupLayout VentanaInsertLayout = new javax.swing.GroupLayout(VentanaInsert.getContentPane());
         VentanaInsert.getContentPane().setLayout(VentanaInsertLayout);
@@ -211,18 +260,86 @@ public class VentanaApp extends javax.swing.JFrame {
                 .addGap(0, 0, Short.MAX_VALUE))
         );
 
+        jPanel4.setBackground(new java.awt.Color(34, 40, 49));
+        jPanel4.setPreferredSize(new java.awt.Dimension(434, 408));
+        jPanel4.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        tituloModificar.setFont(new java.awt.Font("Liberation Sans", 0, 24)); // NOI18N
+        tituloModificar.setForeground(new java.awt.Color(0, 173, 181));
+        tituloModificar.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        tituloModificar.setText("Modificar Facturas");
+        jPanel4.add(tituloModificar, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 20, 260, 60));
+
+        separadorModificar.setForeground(new java.awt.Color(57, 62, 70));
+        jPanel4.add(separadorModificar, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 100, 400, 10));
+
+        labelCodigoModificar.setForeground(new java.awt.Color(238, 238, 238));
+        labelCodigoModificar.setLabelFor(codigoModificar);
+        labelCodigoModificar.setText("- Código");
+        jPanel4.add(labelCodigoModificar, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 140, -1, -1));
+
+        labelFechaModificar.setForeground(new java.awt.Color(238, 238, 238));
+        labelFechaModificar.setLabelFor(fechaModificar);
+        labelFechaModificar.setText("- Fecha Emisión");
+        jPanel4.add(labelFechaModificar, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 180, -1, -1));
+
+        labelDescripcionModificar.setForeground(new java.awt.Color(238, 238, 238));
+        labelDescripcionModificar.setLabelFor(descripcionModificar);
+        labelDescripcionModificar.setText("- Descripción");
+        jPanel4.add(labelDescripcionModificar, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 220, -1, -1));
+
+        labelImporteModificar.setForeground(new java.awt.Color(238, 238, 238));
+        labelImporteModificar.setLabelFor(importeModificar);
+        labelImporteModificar.setText("- Importe Total");
+        jPanel4.add(labelImporteModificar, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 260, -1, -1));
+
+        botonModificar.setBackground(new java.awt.Color(57, 62, 70));
+        botonModificar.setForeground(new java.awt.Color(238, 238, 238));
+        botonModificar.setText("Modificar");
+        botonModificar.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 173, 181)));
+        botonModificar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        botonModificar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botonModificarActionPerformed(evt);
+            }
+        });
+        jPanel4.add(botonModificar, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 320, 80, 40));
+
+        importeModificar.setBackground(new java.awt.Color(57, 62, 70));
+        importeModificar.setForeground(new java.awt.Color(238, 238, 238));
+        importeModificar.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 173, 181)));
+        jPanel4.add(importeModificar, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 250, 140, 30));
+
+        codigoModificar.setBackground(new java.awt.Color(57, 62, 70));
+        codigoModificar.setForeground(new java.awt.Color(238, 238, 238));
+        codigoModificar.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 173, 181)));
+        jPanel4.add(codigoModificar, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 130, 140, 30));
+
+        fechaModificar.setBackground(new java.awt.Color(57, 62, 70));
+        fechaModificar.setForeground(new java.awt.Color(238, 238, 238));
+        fechaModificar.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 173, 181)));
+        jPanel4.add(fechaModificar, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 170, 140, 30));
+
+        descripcionModificar.setBackground(new java.awt.Color(57, 62, 70));
+        descripcionModificar.setForeground(new java.awt.Color(238, 238, 238));
+        descripcionModificar.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 173, 181)));
+        jPanel4.add(descripcionModificar, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 210, 140, 30));
+
         javax.swing.GroupLayout VentanaModificarLayout = new javax.swing.GroupLayout(VentanaModificar.getContentPane());
         VentanaModificar.getContentPane().setLayout(VentanaModificarLayout);
         VentanaModificarLayout.setHorizontalGroup(
             VentanaModificarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(VentanaModificarLayout.createSequentialGroup()
+                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         VentanaModificarLayout.setVerticalGroup(
             VentanaModificarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         jPanel3.setBackground(new java.awt.Color(34, 40, 49));
+        jPanel3.setPreferredSize(new java.awt.Dimension(365, 300));
         jPanel3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         tituloBorrar.setFont(new java.awt.Font("Liberation Sans", 0, 24)); // NOI18N
@@ -232,6 +349,7 @@ public class VentanaApp extends javax.swing.JFrame {
         jPanel3.add(tituloBorrar, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 30, -1, -1));
 
         labelBorrar.setForeground(new java.awt.Color(238, 238, 238));
+        labelBorrar.setLabelFor(deleteId);
         labelBorrar.setText("- Código");
         jPanel3.add(labelBorrar, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 150, 70, 30));
 
@@ -240,6 +358,11 @@ public class VentanaApp extends javax.swing.JFrame {
         botonDelete.setText("Borrar");
         botonDelete.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 173, 181)));
         botonDelete.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        botonDelete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botonDeleteActionPerformed(evt);
+            }
+        });
         jPanel3.add(botonDelete, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 230, 70, 30));
 
         deleteId.setBackground(new java.awt.Color(57, 62, 70));
@@ -254,11 +377,15 @@ public class VentanaApp extends javax.swing.JFrame {
         VentanaBorrar.getContentPane().setLayout(VentanaBorrarLayout);
         VentanaBorrarLayout.setHorizontalGroup(
             VentanaBorrarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, 353, Short.MAX_VALUE)
+            .addGroup(VentanaBorrarLayout.createSequentialGroup()
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 365, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         VentanaBorrarLayout.setVerticalGroup(
             VentanaBorrarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, 287, Short.MAX_VALUE)
+            .addGroup(VentanaBorrarLayout.createSequentialGroup()
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -332,6 +459,9 @@ public class VentanaApp extends javax.swing.JFrame {
         });
         PanelPrincipal.add(BotonBorrar, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 130, 240, 40));
 
+        separadorPrincipal.setForeground(new java.awt.Color(57, 62, 70));
+        PanelPrincipal.add(separadorPrincipal, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 83, 900, 10));
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -348,31 +478,80 @@ public class VentanaApp extends javax.swing.JFrame {
 
     private void BotonSelectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonSelectActionPerformed
         // TODO add your handling code here:
+        // Refresco la tabla
+        refrescarTabla();
+        
+        // Pongo la ventana con los ajustes predeterminados
         this.VentanaSelect.setVisible(true);
-        this.VentanaSelect.setSize(854, 666);
+        this.VentanaSelect.setSize(860, 680);
         this.VentanaSelect.setResizable(false);
         this.VentanaSelect.setLocationRelativeTo(null);
     }//GEN-LAST:event_BotonSelectActionPerformed
 
     private void BotonInsertActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonInsertActionPerformed
         // TODO add your handling code here:
+        // Pongo la ventana con los ajustes predeterminados
         this.VentanaInsert.setVisible(true);
-        this.VentanaInsert.setSize(854, 666);
+        this.VentanaInsert.setSize(450, 418);
         this.VentanaInsert.setResizable(false);
         this.VentanaInsert.setLocationRelativeTo(null);
     }//GEN-LAST:event_BotonInsertActionPerformed
 
     private void BotonModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonModificarActionPerformed
         // TODO add your handling code here:
+        // Pongo la ventana con los ajustes predeterminados
         this.VentanaModificar.setVisible(true);
-        this.VentanaModificar.setSize(854, 666);
+        this.VentanaModificar.setSize(450, 418);
         this.VentanaModificar.setResizable(false);
         this.VentanaModificar.setLocationRelativeTo(null);
     }//GEN-LAST:event_BotonModificarActionPerformed
 
     private void BotonBorrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonBorrarActionPerformed
         // TODO add your handling code here:
+        // Pongo la ventana con los ajustes predeterminados
+        this.VentanaBorrar.setVisible(true);
+        this.VentanaBorrar.setSize(365, 315);
+        this.VentanaBorrar.setResizable(false);
+        this.VentanaBorrar.setLocationRelativeTo(null);
     }//GEN-LAST:event_BotonBorrarActionPerformed
+
+    private void botonDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonDeleteActionPerformed
+        // TODO add your handling code here:
+        // Borro la factura
+        borrarFactura();
+        
+        // Reseteo el texto al borrar
+        this.deleteId.setText("");
+    }//GEN-LAST:event_botonDeleteActionPerformed
+
+    private void botonModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonModificarActionPerformed
+        // TODO add your handling code here:
+        // Modifico la factura
+        modificarFactura();
+        
+        // Reseteo los campos a rellenar
+        this.codigoModificar.setText("");
+        this.fechaModificar.setText("");
+        this.descripcionModificar.setText("");
+        this.importeModificar.setText("");
+    }//GEN-LAST:event_botonModificarActionPerformed
+
+    private void botonInsertarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonInsertarActionPerformed
+        // TODO add your handling code here:
+        // Inserto la factura
+        insertarFactura();
+
+        // Reseteo los campos a rellenar
+        this.insertId.setText("");
+        this.insertDescripcion.setText("");
+        this.insertFecha.setText("");
+        this.insertImporte.setText("");
+    }//GEN-LAST:event_botonInsertarActionPerformed
+
+    private void botonRefrescarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonRefrescarActionPerformed
+        // TODO add your handling code here:
+        refrescarTabla();
+    }//GEN-LAST:event_botonRefrescarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -423,8 +602,14 @@ public class VentanaApp extends javax.swing.JFrame {
     private javax.swing.JDialog VentanaSelect;
     private javax.swing.JButton botonDelete;
     private javax.swing.JButton botonInsertar;
+    private javax.swing.JButton botonModificar;
+    private javax.swing.JButton botonRefrescar;
+    private javax.swing.JTextField codigoModificar;
     private javax.swing.JTextField deleteId;
+    private javax.swing.JTextField descripcionModificar;
+    private javax.swing.JTextField fechaModificar;
     private javax.swing.Box.Filler filler1;
+    private javax.swing.JTextField importeModificar;
     private javax.swing.JTextField insertDescripcion;
     private javax.swing.JTextField insertFecha;
     private javax.swing.JTextField insertId;
@@ -432,16 +617,195 @@ public class VentanaApp extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JSeparator jSeparator1;
     private javax.swing.JLabel labelBorrar;
     private javax.swing.JLabel labelCodigo;
+    private javax.swing.JLabel labelCodigoModificar;
     private javax.swing.JLabel labelDescripcion;
+    private javax.swing.JLabel labelDescripcionModificar;
     private javax.swing.JLabel labelFecha;
+    private javax.swing.JLabel labelFechaModificar;
     private javax.swing.JLabel labelImporte;
+    private javax.swing.JLabel labelImporteModificar;
     private javax.swing.JSeparator separadorBorrar;
     private javax.swing.JSeparator separadorInsertar;
+    private javax.swing.JSeparator separadorModificar;
+    private javax.swing.JSeparator separadorPrincipal;
     private javax.swing.JTable tabla;
     private javax.swing.JLabel tituloBorrar;
     private javax.swing.JLabel tituloInsertar;
+    private javax.swing.JLabel tituloModificar;
     // End of variables declaration//GEN-END:variables
+
+     // Creo una instancia del controlador con mi bd
+     private static final FacturasJpaController controlador = new FacturasJpaController(
+            Persistence.createEntityManagerFactory("p81jorge"));
+
+    // Método para parsear una factura
+    private Facturas parsearFactura(String id, String fecha, String importe, String desc) {
+        // Parseo el id introducido
+        int idParseada = 0;
+        Date fechaParseada = null;
+        double importeParseada = 0;
+        // Parseo los números
+        try {
+            idParseada = Integer.parseInt(id);
+            importeParseada = Double.parseDouble(importe);
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null,
+                    "El id o el importe introducidos no son válidos");
+        }
+        fechaParseada = parsearDate(fecha);
+
+        // Creo la factura
+        Facturas factura = new Facturas(idParseada);
+        factura.setDescripcion(desc);
+        factura.setFechaEmision(fechaParseada);
+        factura.setImporteTotal(importeParseada);
+
+        return factura;
+    }
+
+    // Método para parsear un Date
+    private static Date parsearDate(String fecha) {
+        SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd");
+        Date fechaParseada = null;
+        try {
+            fechaParseada = formato.parse(fecha);
+        } catch (ParseException e) {
+            JOptionPane.showMessageDialog(null, "La fecha introducida no es correcta");
+        }
+        return fechaParseada;
+    }
+
+    // Método para insertar factura
+    private void insertarFactura(){
+        // Creo la factura
+        Facturas factura = parsearFactura(this.insertId.getText(), this.insertFecha.getText(),
+                this.insertImporte.getText(), this.insertDescripcion.getText());
+
+        // Inserto la factura con el controlador
+        try {
+            controlador.create(factura);
+        } catch (PreexistingEntityException e) {
+            JOptionPane.showMessageDialog(null, "Esa factura ya existe: " + e.getMessage());
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Ha habido un error: " + e.getMessage());
+        }
+    }
+    
+    // Método para borrar factura
+    private void borrarFactura(){
+        // Borro la factura
+        int id = 0;
+        try {
+            // Parseo la id
+            id = Integer.parseInt(this.deleteId.getText());
+            
+            // Uso el controlador para borrar la factura
+            controlador.destroy(id);
+            
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null,
+                    "El id introducido no es válido");
+        } catch (NonexistentEntityException e){
+            JOptionPane.showMessageDialog(null,
+                    "La factura que quieres borrar no existe");
+        }
+    }
+    
+    // Método para modificar una factura
+    private void modificarFactura(){
+        
+        Facturas factura = filtrarCambios();
+        
+        // Modifico la factura con el controlador
+        try {
+            controlador.edit(factura);
+        } catch (NonexistentEntityException e){
+            JOptionPane.showMessageDialog(null,
+                    "La factura que quieres modificar no existe");
+        } catch (Exception e){
+            JOptionPane.showMessageDialog(null,
+                    "Ha ocurrido un error al modificar");
+        }
+    }
+    
+    // Método para cambiar los campos introducidos
+    private Facturas filtrarCambios(){
+        // Parseo la id
+        int id = 0;
+        try {
+            id = Integer.parseInt(this.codigoModificar.getText());
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null,
+                    "El id introducido no es válido");
+        }
+        
+        // Busco la factura por la pk que ha introducido
+        Facturas factura = controlador.findFacturas(id);
+        
+        // Cambio solo los campos que el usuario haya introducido y dejo los demás
+        // igual
+        if (!this.fechaModificar.getText().equals("")){
+            factura.setFechaEmision(parsearDate(this.fechaModificar.getText()));
+        }
+        if (!this.descripcionModificar.getText().equals("")){
+            factura.setDescripcion(this.descripcionModificar.getText());
+        }
+        if (!this.importeModificar.getText().equals("")){
+            double importe = 0;
+            try {
+            importe = Double.parseDouble(this.importeModificar.getText());
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null,
+                    "El importe introducido no es válido");
+        }
+            factura.setImporteTotal(importe);
+        }
+        
+        return factura;
+    }
+    
+    // Método para resfrescar la tabla
+    private void refrescarTabla(){
+        
+        // Creamos un modelo para la tabla
+        DefaultTableModel modeloTabla = new DefaultTableModel(){
+
+            // Sobreescribo el método de si es editable en la creación del modelo
+            // para que no se pueda editar ninguna celda
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+
+        };
+        
+        // Creo los títulos de la tabla y los pongo
+        String[] columnas = {"Codigo", "Fecha", "Descripcion", "Importe"};
+        modeloTabla.setColumnIdentifiers(columnas);
+        
+        // Creo una lsita con todas las facturas que hay en la bd actualmente
+        List<Facturas> lista = controlador.findFacturasEntities();
+        
+        // Recorremos la lista añadiendo los datos
+        for (Facturas f : lista) {
+            // Formateo la fecha para que quede bien
+            SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd");
+            String fechaFormateada = formato.format(f.getFechaEmision());
+            
+            // Meto los datos de la factura en una array de object
+            Object[] filaFactura = {f.getIdFactura(),  fechaFormateada, f.getDescripcion(), f.getImporteTotal()};
+            
+            // Añado la fila anteriormente creada
+            modeloTabla.addRow(filaFactura); 
+        }
+
+        // Establezco el modelo creado en la tabla
+        tabla.setModel(modeloTabla);
+    }
+    
 }
